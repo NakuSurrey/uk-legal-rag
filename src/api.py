@@ -1,17 +1,27 @@
 """
 Phase 3: FastAPI server for the RAG pipeline.
-Wraps the ask() function from rag_chain.py into a REST API endpoint.
 """
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uvicorn
 
-# Import your working RAG chain from Phase 2
+# from rag_chain import ask
+# import sys
+# import os
+# sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 from rag_chain import ask
 
-# --- Request/Response Models ---
+# from rag_chain import ask, initialize  # your existing import stays the same
+
 class QuestionRequest(BaseModel):
     question: str
 
@@ -20,31 +30,25 @@ class AnswerResponse(BaseModel):
     sources: list
     num_chunks: int
 
-# --- Create the FastAPI app ---
 app = FastAPI(
     title="UK Legal RAG API",
     description="Ask questions about UK regulatory documents",
     version="1.0.0"
 )
 
-# --- CORS Middleware (THE TRAP FIX) ---
-# Without this, your Streamlit frontend will REFUSE to talk to this backend.
-# The error messages are incredibly confusing for beginners.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],       # Allow all origins (fine for development)
+    allow_origins=["*"],       
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# --- Health Check Endpoint ---
 @app.get("/health")
 async def health_check():
     """Quick check that the server is running."""
     return {"status": "healthy"}
 
-# --- Main Q&A Endpoint ---
 @app.post("/ask", response_model=AnswerResponse)
 async def ask_question(request: QuestionRequest):
     """
@@ -64,6 +68,5 @@ async def ask_question(request: QuestionRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"RAG pipeline error: {str(e)}")
 
-# --- Run the server ---
 if __name__ == "__main__":
     uvicorn.run("api:app", host="0.0.0.0", port=8000, reload=True)

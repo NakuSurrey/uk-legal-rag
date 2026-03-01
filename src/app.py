@@ -10,12 +10,13 @@ in a professional chat format.
 import streamlit as st
 import requests
 import time
+import os
 
 # ============================================================
 # CONFIGURATION
 # ============================================================
 # Where  FastAPI server is running
-API_URL = "http://localhost:8000"
+API_URL = os.getenv("API_URL", "http://localhost:8000")
 
 # ============================================================
 # PAGE SETUP
