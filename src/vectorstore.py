@@ -2,28 +2,9 @@
 PHASE 1 - SCRIPT 3: VECTOR STORE (Embedding + ChromaDB)
 =========================================================
 What this does:
-    Takes your text chunks, converts them into mathematical vectors (embeddings)
-    using a FREE Hugging Face model that runs locally on your machine,
-    and saves them into a ChromaDB database on your hard drive.
-
-Why Hugging Face locally?
-    - FREE. No API key needed. No internet needed after first download.
-    - The model downloads once (~90MB) and then runs entirely on your machine.
-    - We're using "all-MiniLM-L6-v2" — a small, fast, high-quality model.
-
-How to test:
-    1. Make sure your venv is activated
-    2. From your PROJECT ROOT folder, run:
-       python src/vectorstore.py
-    3. FIRST RUN will take 1-3 minutes (downloading the model).
-       After that, it will be fast because the model is cached.
-    4. You should see "Database created with X chunks" in the terminal.
-
-If it works: Move on to Script 4 (query_test.py) — THE MILESTONE TEST!
-
-IMPORTANT: This script creates a folder called chroma_db/ in your project root.
-           This folder is already in your .gitignore (from Phase 0), so it
-           won't accidentally get uploaded to GitHub.
+    Takes  text chunks, converts them into mathematical vectors (embeddings)
+    using a FREE Hugging Face model that runs locally on  machine,
+    and saves them into a ChromaDB database on  hard drive.
 """
 
 from langchain_chroma import Chroma
@@ -38,7 +19,7 @@ import shutil
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 # === CONFIGURATION ===
-# Where to save the database on your hard drive
+# Where to save the database on  hard drive
 # CHROMA_DB_DIR = "chroma_db"
 
 CHROMA_DB_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "chroma_db")
@@ -53,7 +34,7 @@ def get_embedding_function():
     Creates the embedding function using Hugging Face.
     
     First time: Downloads the model from the internet (~90MB).
-    After that: Uses the cached version from your machine (no internet needed).
+    After that: Uses the cached version from  machine (no internet needed).
     """
     print("  Loading Hugging Face embedding model...")
     print("  (First run downloads ~90MB model. After that, it's instant.)")
@@ -78,11 +59,11 @@ def create_vectorstore(chunks: list, force_rebuild: bool = False):
                       If False, skips if database already exists (saves time + money).
     
     Returns:
-        A ChromaDB vector store object you can search.
+        A ChromaDB vector store object  can search.
     
-    TRAP AVOIDED: We use persist_directory so the database saves to your hard drive.
-    Without this, the database lives in RAM and disappears when you close the terminal.
-    You'd have to re-embed everything (slow + wasteful) every time you restart.
+    TRAP AVOIDED:  used persist_directory so the database saves to  hard drive.
+    Without this, the database lives in RAM and disappears when close the terminal.
+    'd have to re-embed everything (slow + wasteful) every time  restart.
     """
 
     # Check if database already exists
@@ -125,7 +106,7 @@ def create_vectorstore(chunks: list, force_rebuild: bool = False):
 def load_vectorstore():
     """
     Loads an EXISTING vector store from disk.
-    Use this when you've already built the database and just want to search it.
+    when already built the database and just want to search it.
     """
     if not os.path.exists(CHROMA_DB_DIR):
         raise FileNotFoundError(
@@ -160,7 +141,7 @@ if __name__ == "__main__":
     print(f"  Created {len(chunks)} chunks.")
 
     # Step 3: Embed and store
-    # force_rebuild=True so it always creates a fresh database when you test
+    # force_rebuild=True so it always creates a fresh database when  test
     print("\nStep 3: Embedding chunks and building database...")
     vectorstore = create_vectorstore(chunks, force_rebuild=True)
 
@@ -179,7 +160,7 @@ if __name__ == "__main__":
 
     print()
     print("-" * 60)
-    print("SUCCESS! Your vector database is built and searchable.")
+    print("SUCCESS!  vector database is built and searchable.")
     print(f"Database saved at: {CHROMA_DB_DIR}/")
     print("Move on to Script 4 (query_test.py) for the MILESTONE TEST!")
     print("-" * 60)

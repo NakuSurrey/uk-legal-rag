@@ -2,17 +2,17 @@
 PHASE 1 - SCRIPT 4: QUERY TEST (THE MILESTONE!)
 ==================================================
 What this does:
-    Lets you type a question and retrieves the 3 most relevant 
-    paragraphs from your vector database.
+    Lets  type a question and retrieves the 3 most relevant 
+    paragraphs from  vector database.
     
-    This is YOUR MILESTONE: if this works, Phase 1 is COMPLETE.
+    This is  MILESTONE: if this works, Phase 1 is COMPLETE.
 
 How to test:
-    1. Make sure you've already run Script 3 (vectorstore.py) to build the database.
-    2. From your PROJECT ROOT folder, run:
+    1. Make sure 've already run Script 3 (vectorstore.py) to build the database.
+    2. From  PROJECT ROOT folder, run:
        python src/query_test.py
     3. Type a question like: "What are the changes to zero hours contracts?"
-    4. You should see 3 relevant paragraphs from your PDF!
+    4.  should see 3 relevant paragraphs from  PDF!
 
 What to try:
     - "What changes affect sick pay?"
@@ -21,7 +21,7 @@ What to try:
     - "What are the plans for flexible working?"
     - Type 'quit' to exit.
 
-After this works: COMMIT TO GIT! Then you're ready for Phase 2.
+After this works: COMMIT TO GIT! Then 're ready for Phase 2.
     git add .
     git commit -m "Phase 1 complete: PDF parsing, chunking, and vector search working"
     git push origin master
@@ -57,7 +57,7 @@ def search(vectorstore, query: str, num_results: int = 3):
 
 def main():
     print("=" * 60)
-    print("PHASE 1 - MILESTONE TEST: QUERY YOUR DOCUMENTS")
+    print("PHASE 1 - MILESTONE TEST: QUERY  DOCUMENTS")
     print("=" * 60)
     print()
 
@@ -73,20 +73,20 @@ def main():
     count = vectorstore._collection.count()
     print(f"Database loaded with {count} chunks.")
     print()
-    print("Type a question about your UK regulatory documents.")
+    print("Type a question about  UK regulatory documents.")
     print("Type 'quit' to exit.")
     print("-" * 60)
 
     while True:
         print()
-        query = input("Your question: ").strip()
+        query = input(" question: ").strip()
 
         if not query:
             continue
 
         if query.lower() in ("quit", "exit", "q"):
-            print("\nGoodbye! Phase 1 is complete if you saw relevant results above.")
-            print("Now commit your work:")
+            print("\nGoodbye! Phase 1 is complete if  saw relevant results above.")
+            print("Now commit  work:")
             print('  git add .')
             print('  git commit -m "Phase 1 complete: PDF parsing, chunking, vector search"')
             print('  git push origin master')

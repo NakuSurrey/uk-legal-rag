@@ -2,20 +2,12 @@
 PHASE 1 - SCRIPT 2: TEXT CHUNKER
 ==================================
 What this does:
-    Takes the text from your PDF and splits it into overlapping chunks.
+    Takes the text from  PDF and splits it into overlapping chunks.
     
 Why chunk?
-    - You can't send a whole 12-page document to an AI at once (too expensive, too slow).
-    - Instead, you chop it into bite-sized paragraphs (~1000 characters each).
+    -  can't send a whole 12-page document to an AI at once (too expensive, too slow).
+    - Instead,  chop it into bite-sized paragraphs (~1000 characters each).
     - Overlap (200 chars) ensures no sentence gets cut in half between two chunks.
-
-How to test:
-    1. Make sure your venv is activated
-    2. From your PROJECT ROOT folder, run:
-       python src/chunker.py
-    3. You should see numbered chunks printed in the terminal.
-
-If it works: Move on to Script 3 (vectorstore.py)
 """
 
 # from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -60,7 +52,7 @@ def chunk_text(text: str, chunk_size: int = 1000, chunk_overlap: int = 200) -> l
 
 
 # =============================================================
-# TEST: Run this script directly to see your chunks
+# TEST: Run this script directly to see  chunks
 # =============================================================
 if __name__ == "__main__":
     print("=" * 60)
@@ -92,6 +84,6 @@ if __name__ == "__main__":
 
     print()
     print("-" * 60)
-    print(f"SUCCESS! Created {len(chunks)} chunks from your PDF.")
+    print(f"SUCCESS! Created {len(chunks)} chunks from  PDF.")
     print("If the chunks look like readable paragraphs, move to Script 3.")
     print("-" * 60)

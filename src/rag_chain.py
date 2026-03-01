@@ -1,16 +1,9 @@
 """
 Phase 2: RAG Chain — LLM Integration with Hugging Face Inference API
 =====================================================================
-This script connects your working ChromaDB (Phase 1) to a free LLM.
+This script connects  working ChromaDB (Phase 1) to a free LLM.
 It retrieves relevant chunks and generates grounded, accurate answers.
 
-Usage:
-    python src/rag_chain.py
-
-Prerequisites:
-    - Phase 1 complete (chroma_db/ folder exists with embedded chunks)
-    - HUGGINGFACE_API_KEY set in your .env file
-    - venv activated
 """
 
 import os
@@ -26,9 +19,9 @@ HUGGINGFACE_API_KEY = os.getenv("HUGGINGFACE_API_KEY")
 
 if not HUGGINGFACE_API_KEY:
     print("\n❌ ERROR: HUGGINGFACE_API_KEY not found in .env file.")
-    print("   Fix: Open your .env file and add your key:")
+    print("   Fix: Open  .env file and add  key:")
     print("   HUGGINGFACE_API_KEY=hf_xxxxxxxxxxxxxxxxxxxxxxxxxx")
-    print("\n   Get your free key at: https://huggingface.co/settings/tokens")
+    print("\n   Get  free key at: https://huggingface.co/settings/tokens")
     print("   Token type: 'Read' access is enough.\n")
     sys.exit(1)
 
@@ -45,11 +38,10 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from huggingface_hub import InferenceClient
 
 # ─────────────────────────────────────────────
-# Step 3: Connect to your existing ChromaDB
+# Step 3: Connect to existing ChromaDB
 # ─────────────────────────────────────────────
 # CHROMA_PATH = "./chroma_db"
 
-import os
 CHROMA_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "chroma_db")
 
 EMBEDDING_MODEL = "all-MiniLM-L6-v2"
@@ -65,7 +57,7 @@ try:
     collection = vectorstore._collection
     doc_count = collection.count()
     if doc_count == 0:
-        print("\n❌ ERROR: ChromaDB is empty. Did you run Phase 1?")
+        print("\n❌ ERROR: ChromaDB is empty. Did  run Phase 1?")
         sys.exit(1)
     print(f"✅ ChromaDB loaded — {doc_count} chunks available")
 except Exception as e:
@@ -104,15 +96,15 @@ except Exception as e:
     print(f"\n❌ ERROR: Could not connect to Hugging Face API.")
     print(f"   Details: {e}")
     print("   Common fixes:")
-    print("   1. Check your API key is correct in .env")
-    print("   2. Check your internet connection")
+    print("   1. Check  API key is correct in .env")
+    print("   2. Check  internet connection")
     print("   3. The model may be loading (cold start — wait 60s and retry)\n")
     sys.exit(1)
 
 # ─────────────────────────────────────────────
 # Step 6: The Anti-Hallucination System Prompt
 # ─────────────────────────────────────────────
-SYSTEM_PROMPT = """You are a UK legal and regulatory assistant. Your job is to answer questions accurately using ONLY the provided context from official UK documents.
+SYSTEM_PROMPT = """ are a UK legal and regulatory assistant.  job is to answer questions accurately using ONLY the provided context from official UK documents.
 
 STRICT RULES:
 1. ONLY use information from the CONTEXT below to answer.
@@ -120,7 +112,7 @@ STRICT RULES:
 3. Do NOT make up laws, regulations, dates, or numbers.
 4. Quote the relevant section when possible.
 5. Keep answers concise and professional.
-6. If the context is partially relevant, say what you CAN confirm and what you CANNOT."""
+6. If the context is partially relevant, say what  CAN confirm and what  CANNOT."""
 
 # ─────────────────────────────────────────────
 # Step 7: Helper functions
@@ -155,8 +147,7 @@ def format_chat_history(history):
 # ─────────────────────────────────────────────
 def ask(question: str) -> dict:
     """
-    Ask a question about your UK regulatory documents.
-    Returns dict with: "answer", "sources", "num_chunks"
+    Ask a question about  UK regulatory documents.
     """
     try:
         # Step A: Retrieve relevant chunks
@@ -239,7 +230,7 @@ def ask(question: str) -> dict:
 if __name__ == "__main__":
     print("\n" + "=" * 60)
     print("  UK Legal Document Assistant — Phase 2 Test")
-    print("  Type your questions below. Type 'quit' to exit.")
+    print("  Type  questions below. Type 'quit' to exit.")
     print("  Type 'sources' to see what chunks were used.")
     print("  Type 'clear' to reset conversation memory.")
     print("=" * 60 + "\n")
@@ -248,7 +239,7 @@ if __name__ == "__main__":
 
     while True:
         try:
-            user_input = input("📝 You: ").strip()
+            user_input = input("📝 : ").strip()
         except (KeyboardInterrupt, EOFError):
             print("\n\nGoodbye! 👋")
             break
@@ -281,4 +272,4 @@ if __name__ == "__main__":
         last_result = result
 
         print(f"\n🤖 Assistant: {result['answer']}")
-        print(f"   (Used {result['num_chunks']} chunks from your documents)\n")
+        print(f"   (Used {result['num_chunks']} chunks from  documents)\n")
