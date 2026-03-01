@@ -56,6 +56,7 @@ langchain-chroma==1.1.0
 langchain-classic==1.0.1
 langchain-community==0.4.1
 langchain-core==1.2.16
+langchain-huggingface==1.2.0
 langchain-openai==1.1.10
 langchain-text-splitters==1.1.1
 langgraph==1.0.9
