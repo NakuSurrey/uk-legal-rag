@@ -47,7 +47,11 @@ from huggingface_hub import InferenceClient
 # ─────────────────────────────────────────────
 # Step 3: Connect to your existing ChromaDB
 # ─────────────────────────────────────────────
-CHROMA_PATH = "./chroma_db"
+# CHROMA_PATH = "./chroma_db"
+
+import os
+CHROMA_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "chroma_db")
+
 EMBEDDING_MODEL = "all-MiniLM-L6-v2"
 
 print("⏳ Loading vector database...")

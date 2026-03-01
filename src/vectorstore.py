@@ -39,7 +39,9 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 # === CONFIGURATION ===
 # Where to save the database on your hard drive
-CHROMA_DB_DIR = "chroma_db"
+# CHROMA_DB_DIR = "chroma_db"
+
+CHROMA_DB_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "chroma_db")
 
 # The Hugging Face model for embeddings (free, runs locally)
 # "all-MiniLM-L6-v2" is small (~90MB), fast, and very good quality
