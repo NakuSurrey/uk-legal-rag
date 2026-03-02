@@ -224,6 +224,76 @@ def ask(question: str) -> dict:
                 "sources": [], "num_chunks": 0
             }
 
+
+# ============================================================
+# PDF UPLOAD FEATURE (Dynamic document ingestion)
+# ============================================================
+
+import fitz  # PyMuPDF - already installed
+# from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+import uuid
+
+def ingest_pdf_bytes(pdf_bytes: bytes, filename: str, session_id: str) -> dict:
+    """
+    Takes raw PDF bytes from upload, chunks, embeds, and adds
+    to the EXISTING ChromaDB collection. Tagged with session_id
+    so we can delete only this session's chunks later.
+    """
+    doc = fitz.open(stream=pdf_bytes, filetype="pdf")
+    full_text = ""
+    for page in doc:
+        full_text += page.get_text() + "\n"
+    doc.close()
+    
+    if not full_text.strip():
+        return {"chunks_added": 0, "chunk_ids": [], "error": "PDF contains no extractable text. It may be a scanned image."}
+    
+    splitter = RecursiveCharacterTextSplitter(
+        chunk_size=1000,
+        chunk_overlap=200,
+        length_function=len
+    )
+    chunks = splitter.split_text(full_text)
+    
+    collection = vectorstore._collection
+    
+    chunk_ids = []
+    documents = []
+    metadatas = []
+    
+    for i, chunk in enumerate(chunks):
+        chunk_id = f"upload_{session_id}_{uuid.uuid4().hex[:8]}"
+        chunk_ids.append(chunk_id)
+        documents.append(chunk)
+        metadatas.append({
+            "source": filename,
+            "page": str(i),
+            "session_id": session_id,
+            "uploaded": "true"
+        })
+    
+    collection.add(
+        ids=chunk_ids,
+        documents=documents,
+        metadatas=metadatas
+    )
+    
+    return {"chunks_added": len(chunks), "chunk_ids": chunk_ids}
+
+
+def cleanup_session_chunks(session_id: str) -> dict:
+    """Removes all chunks uploaded during this session."""
+    collection = vectorstore._collection
+    
+    # results = collection.get(where={"session_id": session_id})
+    results = collection.get(where={"uploaded": "true"})
+    if results and results["ids"]:
+        collection.delete(ids=results["ids"])
+        return {"chunks_removed": len(results["ids"])}
+    
+    return {"chunks_removed": 0}
+
 # ─────────────────────────────────────────────
 # Step 10: Interactive Terminal Chat Loop
 # ─────────────────────────────────────────────

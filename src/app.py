@@ -18,6 +18,20 @@ import os
 # Where  FastAPI server is running
 API_URL = os.getenv("API_URL", "http://localhost:8000")
 
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+import uuid
+
+if "session_id" not in st.session_state:
+    st.session_state.session_id = uuid.uuid4().hex
+
+if "uploaded_files" not in st.session_state:
+    st.session_state.uploaded_files = []
+
+if "cleared_files" not in st.session_state:
+    st.session_state.cleared_files = []
+    
 # ============================================================
 # PAGE SETUP
 # ============================================================
@@ -94,6 +108,24 @@ with st.sidebar:
     if st.button("🗑️ Clear Chat History", use_container_width=True):
         st.session_state.messages = []
         st.rerun()
+        
+    # NEW — Clear uploaded documents button
+    if st.session_state.uploaded_files:
+        if st.button("🗑️ Clear Uploaded Documents", use_container_width=True):
+            try:
+                response = requests.post(
+                    f"{API_URL}/cleanup",
+                    params={"session_id": st.session_state.session_id},
+                    timeout=30
+                )
+                if response.status_code == 200:
+                    for f in st.session_state.uploaded_files:
+                        st.session_state.cleared_files.append(f["name"])
+                    st.session_state.uploaded_files = []
+                    st.sidebar.success("Uploaded documents cleared!")
+                    st.rerun()
+            except Exception:
+                st.sidebar.error("Failed to clear uploads.")
 
     st.divider()
 
@@ -124,6 +156,65 @@ st.markdown(
     '</div>',
     unsafe_allow_html=True,
 )
+# --- PDF Upload Section ---
+st.markdown("### Upload a Document")
+st.caption("Upload a UK regulatory PDF to add it to the knowledge base. Your uploads are temporary and cleared when you leave.")
+
+uploaded_file = st.file_uploader(
+    "Choose a PDF file",
+    type=["pdf"],
+    key="pdf_uploader",
+    help="Upload a UK regulatory or legal PDF (max 50MB)."
+)
+
+# if uploaded_file is not None:
+#     if uploaded_file.name not in [f["name"] for f in st.
+# if uploaded_file is not None:
+#     already_uploaded = uploaded_file.name in [f["name"] for f in st.session_state.uploaded_files]
+#     already_cleared = uploaded_file.name in st.session_state.cleared_files
+    
+#     if not already_uploaded and not already_cleared: 
+#         st.session_state.uploaded_files]:
+#         with st.spinner(f"Processing {uploaded_file.name}... This may take 30-60 seconds."):
+#             try:
+if uploaded_file is not None:
+    already_uploaded = uploaded_file.name in [f["name"] for f in st.session_state.uploaded_files]
+    already_cleared = uploaded_file.name in st.session_state.cleared_files
+
+    if not already_uploaded and not already_cleared:
+        with st.spinner(f"Processing {uploaded_file.name}... This may take 30-60 seconds."):
+            try:
+                files = {"file": (uploaded_file.name, uploaded_file.getvalue(), "application/pdf")}
+                response = requests.post(
+                    f"{API_URL}/upload",
+                    files=files,
+                    params={"session_id": st.session_state.session_id},
+                    timeout=120
+                )
+                
+                if response.status_code == 200:
+                    result = response.json()
+                    st.session_state.uploaded_files.append({
+                        "name": uploaded_file.name,
+                        "chunks": result["chunks_added"]
+                    })
+                    st.success(f"Added! {uploaded_file.name} ({result['chunks_added']} sections indexed)")
+                else:
+                    error_detail = response.json().get("detail", "Unknown error")
+                    st.error(f"Upload failed: {error_detail}")
+            except requests.exceptions.ConnectionError:
+                st.error("Backend is offline. Start the FastAPI server first.")
+            except requests.exceptions.Timeout:
+                st.error("Processing timed out. Try a smaller PDF.")
+            except Exception as e:
+                st.error(f"Error: {str(e)}")
+
+if st.session_state.uploaded_files:
+    st.markdown("**Active Documents:**")
+    for f in st.session_state.uploaded_files:
+        st.caption(f"- {f['name']} ({f['chunks']} sections)")
+
+st.divider()
 
 # ============================================================
 # HELPER: Clean up source display
@@ -163,9 +254,17 @@ def clean_source(source):
 # every time the user interacts with anything. Without session_state,
 # the chat history would vanish after every message.
 
-if "messages" not in st.session_state:
-    st.session_state.messages = []
+# if "messages" not in st.session_state:
+#     st.session_state.messages = []
 
+# import uuid
+
+# if "session_id" not in st.session_state:
+#     st.session_state.session_id = uuid.uuid4().hex
+
+# if "uploaded_files" not in st.session_state:
+#     st.session_state.uploaded_files = []
+    
 # ============================================================
 # DISPLAY EXISTING CHAT HISTORY
 # ============================================================
