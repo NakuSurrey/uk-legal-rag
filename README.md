@@ -10,7 +10,7 @@
 
 This is an end-to-end **Retrieval-Augmented Generation (RAG)** system that allows users to ask natural language questions about UK regulatory documents and receive accurate, fact-checked answers with source citations.
 
-### [Live Demo → uklegalra.me](http://uklegalra.me)
+### [Live Demo → https://uklegalra.me](https://uklegalra.me)
 
 Think of it as a **custom ChatGPT trained on UK legal documents** that can't hallucinate — if the answer isn't in the documents, it says "I don't know" instead of making things up.
 
@@ -100,7 +100,7 @@ Users can also **upload their own PDFs** and query them alongside pre-loaded UK 
 
 | Metric | Value |
 |--------|-------|
-| Deployment Status | ✅ Live at [uklegalra.me](http://uklegalra.me) |
+| Deployment Status | ✅ Live at [uklegalra.me](https://uklegalra.me) |
 | Chunk Retrieval Time | ~200ms |
 | End-to-End Response Time | 2–8 seconds |
 | Database Size | 32 chunks (12-page UK Employment Rights PDF) |
@@ -243,7 +243,7 @@ uk-legal-rag/
 
 ## Try It Yourself
 
-**[Live Demo → uklegalra.me](http://uklegalra.me)**
+**[Live Demo → https://uklegalra.me](https://uklegalra.me)**
 
 Test questions to try:
 1. *"What are the changes to zero hours contracts?"* — factual question
